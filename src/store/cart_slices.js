@@ -31,15 +31,16 @@ const cartSlice = createSlice( {
         },
         removeItemCart ( state, action ) {
             const id = action.payload;
+            console.log( id );
             const existingItem = state.items.find( i => i.id === id );
             state.totalQuantity--;
             if ( existingItem.quantity === 1 )
             {
-                state.items = state.items.filter( i => i !== id );
+                state.items = state.items.filter( i => i.id !== id );
             } else
             {
-                existingItem--;
-                existingItem.totalPrice = existingItem.totalPrice - existingItem.price;
+                existingItem.quantity--;
+                // existingItem.totalPrice = existingItem.totalPrice - existingItem.price;
             }
 
         }
