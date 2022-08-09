@@ -15,7 +15,7 @@ const cartSlice = createSlice( {
             {
                 state.items.push( {
                     id: item.id,
-                    name: item.name,
+                    title: item.title,
                     quantity: 1,
                     price: item.price,
                     totalPrice: item.price,
@@ -30,7 +30,7 @@ const cartSlice = createSlice( {
         },
         removeItemCart ( state, action ) {
             const id = action.payload;
-            const existingItem = state.items.find( i => i.id === item.id );
+            const existingItem = state.items.find( i => i.id === id );
             if ( existingItem.quantity === 1 )
             {
                 state.items = state.items.filter( i => i !== id );
@@ -44,5 +44,5 @@ const cartSlice = createSlice( {
     }
 } );
 
-const cartActions = cartSlice.actions;
+export const cartActions = cartSlice.actions;
 export default cartSlice;
