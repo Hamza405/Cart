@@ -6,10 +6,17 @@ const cartSlice = createSlice( {
     initialState: {
         items: [],
         totalQuantity: 0,
-        totalAmount: 0
+        totalAmount: 0,
+        change: false
     },
     reducers: {
+        replaceCart ( state, action ) {
+            state.totalQuantity = action.payload.totalQuantity;
+            state.items = action.payload.items;
+
+        },
         addItemCart ( state, action ) {
+            state.change = true;
             const item = action.payload;
             const existingItem = state.items.find( i => i.id === item.id );
             state.totalQuantity++;
@@ -31,6 +38,7 @@ const cartSlice = createSlice( {
 
         },
         removeItemCart ( state, action ) {
+            state.change = true;
             const id = action.payload;
             console.log( id );
             const existingItem = state.items.find( i => i.id === id );
@@ -47,6 +55,34 @@ const cartSlice = createSlice( {
         }
     }
 } );
+
+export const getCartData = () => {
+    return async ( dispatch ) => {
+        const fetchData = async () => {
+            const res = await fetch( 'https://tishreen-62882-default-rtdb.firebaseio.com/cart.json' );
+
+            if ( !res.ok )
+            {
+                throw new Error( 'Some thing wrong!' );
+            }
+            const data = res.json();
+            return data;
+        };
+
+        try
+        {
+            const cartData = await fetchData();
+            dispatch( cartActions.replaceCart( cartData ) );
+        } catch ( error )
+        {
+            dispatch( uiActions.showNotification( {
+                status: 'error',
+                title: 'Error',
+                message: error.message
+            } ) );
+        }
+    };
+};
 
 export const sendCartData = ( cart ) => {
     return async ( dispatch ) => {
